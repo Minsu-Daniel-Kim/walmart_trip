@@ -108,9 +108,15 @@ ggplot(dep.7) + geom_bar(aes(Weekday, percent_sum), stat = "identity") + facet_w
 ggplot(dep.8) + geom_bar(aes(Weekday, percent_sum), stat = "identity") + facet_wrap(~ DepartmentDescription, nrow = 2) + ggtitle("percent changes of department by weekday")
 
 ### department mean sd
-df.dep.stat <- df.dep %>% group_by(DepartmentDescription) %>% summarise(stdev = round(sd(percent_sum),5), Mean = round(mean(percent_sum),5)) %>% arrange(stdev) 
+df.dep.stat <- df.dep.scale %>% group_by(DepartmentDescription) %>% summarise(stdev = round(sd(percent_sum),5), Mean = round(mean(percent_sum),5)) %>% arrange(stdev) 
 
 
+df.dep.scale <- df.dep[0,]
+for (na in df.dep$Weekday) {
+  test <- df.dep[df.dep$Weekday == na,]
+  test$percent_sum <- scale(test$percent_sum)
+  df.dep.scale <- rbind(df.dep.scale, test)
+}
 
 
 

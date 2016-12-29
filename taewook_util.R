@@ -1,6 +1,5 @@
 
 
-## category 
 
 get.dep.category <- function(data) {
   # define variables
