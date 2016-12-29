@@ -1,0 +1,71 @@
+### LOOKING AT TRIPTYPE 40 ###
+TRIP TYPE 40
+- Count: 174164    The most frequent
+- Most on Sunday, Least on Thursday
+- Top three categories were food
+- *** Maybe these are people who are looking for food? ***
+- filtered out food, left with household items and personal care
+*** can be categorized as "house trip" ***
+
+
+
+### LOOKING AT WOMEN-LIKE PRODUCT ###
+# wom <- c("LADIESWEAR", "SHEER HOSIERY", "BATH AND SHOWER", "LADIES SOCKS", "BEAUTY")
+Those seem to have the theme "women" in common
+
+- With all, 25 has most with 36 and 40 slightly behind
+- with only Beauty, type 36 has most counts. 40 Comes next
+
+- With "LADIESWEAR", "SHEER HOSIERY", "LADIES SOCKS", 25 is nearly isolated
+	- Other TripTypes are way less, which might suggest that those were bought for somebody else
+- Fri~Sun have more visits. Might indicate school or working position
+- Almost all ScanCounts are <= 2, which indicates that they are not retailers
+*** 25 might by LADY category ***
+- Looking at only 25, MENS WEAR was the most bought category
+*** UPDATE 25 MIGHT BE MOM ***
+
+
+### LOOKING AT RETURNS ###
+- 15500 returns
+- predominantly 999
+- Mostly on weekends, similar trend with total weekday distribution
+- ScanCount predominantly -1.
+	  -12   -10    -9    -7    -6    -5    -4    -3    -2    -1 
+       1     1      2     1    10    16    76   143   814 14394 
+- Regarding return, no particular trend
+	- but top 3 are:
+		- FINANCIAL SERVICES
+		- LADIESWEAR
+		- PRODUCE
+	- with close followups from foods and wearables
+	- least returns from:
+		- photographs, books, cameras, furniture, health & beauty, ladies socks, opticals,
+		electronics, seafood, seasonal, and sheer hosiery
+
+- even distribution throughout weekday
+- Weekday or weekend both TripType 999 and ScanCount -1 predominant
+- Sunday: less Financial returns than Fri. and Sat.
+
+Rankings based on day of Week
+Mon: FINANCIAL SERVICES, PRODUCE, DSD GROCERY (produce  seems to be high here)
+Tue: FINANCIAL, LADIES, MENS, PERSONAL (produce at 5 w/ not much diff with 6,7,8)
+Wed: FINANCIAL, LADIES, MENS, PERSONAL (produce at 6 w/ not much diff with 5,7,8)
+Thu: FINANCIAL, PRODUCE, PERSONAL (personal similar with ranks 4~10)
+Fri: FINANCIAL SERVICES, LADIES WEAR, DSD GROCERY    rest similar (produce at #5)
+Sat: FINANCIAL SERVICES (over 200, weekdays around 150), LADIES WEAR, PRODUCE (similar with next two) 
+Sun: PRODUCE, FINANCIAL (around 150, 200 for Fri and Sat), DSD GROCERY (with dry grocery, ladies and personal right behind)
+
+interesting points:
+- FINANCIAL unusually low on Sun
+- PRODUCE unusually hihg on Sun.
+- PRODUCE in top 3 in following days: Sun (1), Thu (2), Mon (2), Sat (3)
+- Sunday has highest return count. Has increased return count in all departments
+
+
+
+
+PLUS AND MATERNITY might isolate pregnant women
+
+
+> 5
+
