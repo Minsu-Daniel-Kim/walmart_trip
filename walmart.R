@@ -67,6 +67,17 @@ ggplot(type25, aes(x = DepartmentDescription, fill = DepartmentDescription)) +
   geom_bar(show.legend = FALSE) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+plus <- filter(train, DepartmentDescription == "PLUS AND MATERNITY")
+ggplot(plus) + geom_bar(aes(x = TripType, fill = TripType)) + ggtitle("Plus and maternity trip type")
+ggplot(filter(train, DepartmentDescription == "PERSONAL CARE")) + geom_bar(aes(x = TripType, fill = TripType))
+
+
+type25.men <- filter(type25, DepartmentDescription == "MENS WEAR")
+unique(filter(train, DepartmentDescription == "MENS WEAR")$Upc)  # 5563 Unique Upc
+unique(type25.men$Upc) # 3518 Unique Upc
+
+
+max(group_by(type25.men, Upc) %>% summarise(count = n()))
 
 ##### Looking at returns
 returns <- filter(train, ScanCount < 0)
@@ -125,21 +136,139 @@ for(day in days) {
 
 
 
-df.dep <- train %>% filter(ScanCount > 0) %>% group_by(Weekday, DepartmentDescription) %>% summarise(sum = sum(ScanCount), n = n())
-df.tot <- train %>% group_by(Weekday) %>% summarise(sum_tot = sum(ScanCount), n_tot = n())
-df.dep <- left_join(df.dep, df.tot, by = c("Weekday" = "Weekday"))
-df.dep$percent_sum <- df.dep$sum / df.dep$sum_tot * 100
-df.dep$percent_n <- df.dep$n / df.dep$n_tot * 100
+df.dep.pos <- train %>% group_by(Weekday, DepartmentDescription)
+
+# ScanCount/TotalScans, ReturnCount/TotalReturn, ReturnCount/TotalScans
+
+df.dep <- train %>% 
+  group_by(Weekday, DepartmentDescription) %>% 
+  summarise(purchases = sum(ScanCount[ScanCount > 0]), returns = sum(ScanCount[ScanCount < 0]))
+
+df.tot <- train %>% 
+  group_by(DepartmentDescription) %>% 
+  summarise(total_purchase = sum(ScanCount[ScanCount > 0]), total_return = sum(ScanCount[ScanCount < 0]))
+
+
+df.dep <- left_join(df.dep, df.tot, by = c("DepartmentDescription" = "DepartmentDescription"))
+
+df.dep$purchase_percent <- df.dep$purchases / df.dep$total_purchase * 100
+df.dep$return_percent <- df.dep$returns / df.dep$total_return * 100
+df.dep$return_rate <- abs(df.dep$returns) / df.dep$total_purchase * 100
+
+department.name <- unique(df.dep$DepartmentDescription)
+dep.1 <- df.dep %>% filter(DepartmentDescription %in% department.name[1:10])
+dep.2 <- df.dep %>% filter(DepartmentDescription %in% department.name[11:20])
+dep.3 <- df.dep %>% filter(DepartmentDescription %in% department.name[21:30])
+dep.4 <- df.dep %>% filter(DepartmentDescription %in% department.name[31:40])
+dep.5 <- df.dep %>% filter(DepartmentDescription %in% department.name[41:50])
+dep.6 <- df.dep %>% filter(DepartmentDescription %in% department.name[51:60])
+dep.7 <- df.dep %>% filter(DepartmentDescription %in% department.name[61:64])
+dep.8 <- df.dep %>% filter(DepartmentDescription %in% department.name[65:69])
+
+dep.9 <- df.dep %>% filter(DepartmentDescription %in% c("MENS WEAR", "LADIESWEAR"))
+
+ggplot(dep.1) + 
+  geom_line(aes(x = Weekday, y = purchase_percent, group = 1), colour = "blue") +
+  geom_line(aes(x = Weekday, y = return_percent, group = 1), colour = "red") +
+  facet_wrap(~ DepartmentDescription, ncol = 3) + ggtitle("Purchase Percent, Return Percent")
+ggsave("SaleReturn1.jpeg", dpi = 600)
+ggplot(dep.2) +   
+  geom_line(aes(x = Weekday, y = purchase_percent, group = 1), colour = "blue") +
+  geom_line(aes(x = Weekday, y = return_percent, group = 1), colour = "red") +
+  facet_wrap(~ DepartmentDescription, ncol = 3) + ggtitle("Purchase Percent, Return Percent")
+ggsave("SaleReturn2.jpeg")
+ggplot(dep.3) + 
+  geom_line(aes(x = Weekday, y = purchase_percent, group = 1), colour = "blue") +
+  geom_line(aes(x = Weekday, y = return_percent, group = 1), colour = "red") +
+  facet_wrap(~ DepartmentDescription, ncol = 3) + ggtitle("Purchase Percent, Return Percent")
+ggsave("SaleReturn3.jpeg")
+ggplot(dep.4) +   
+  geom_line(aes(x = Weekday, y = purchase_percent, group = 1), colour = "blue") +
+  geom_line(aes(x = Weekday, y = return_percent, group = 1), colour = "red") +
+  facet_wrap(~ DepartmentDescription, ncol = 3) + ggtitle("Purchase Percent, Return Percent")
+ggsave("SaleReturn4.jpeg")
+ggplot(dep.5) + 
+  geom_line(aes(x = Weekday, y = purchase_percent, group = 1), colour = "blue") +
+  geom_line(aes(x = Weekday, y = return_percent, group = 1), colour = "red") +
+  facet_wrap(~ DepartmentDescription, ncol = 3) + ggtitle("Purchase Percent, Return Percent")
+ggsave("SaleReturn5.jpeg")
+ggplot(dep.6) +   
+  geom_line(aes(x = Weekday, y = purchase_percent, group = 1), colour = "blue") +
+  geom_line(aes(x = Weekday, y = return_percent, group = 1), colour = "red") +
+  facet_wrap(~ DepartmentDescription, ncol = 3) + ggtitle("Purchase Percent, Return Percent")
+ggsave("SaleReturn6.jpeg")
+ggplot(dep.7) + 
+  geom_line(aes(x = Weekday, y = purchase_percent, group = 1), colour = "blue") +
+  geom_line(aes(x = Weekday, y = return_percent, group = 1), colour = "red") +
+  facet_wrap(~ DepartmentDescription, ncol = 3) + ggtitle("Purchase Percent, Return Percent")
+ggsave("SaleReturn7.jpeg")
+ggplot(dep.8) +   
+  geom_line(aes(x = Weekday, y = purchase_percent, group = 1), colour = "blue") +
+  geom_line(aes(x = Weekday, y = return_percent, group = 1), colour = "red") +
+  facet_wrap(~ DepartmentDescription, ncol = 3) + ggtitle("Purchase Percent, Return Percent")
+ggsave("SaleReturn8.jpeg")
+ggplot(dep.9) +   
+  geom_line(aes(x = Weekday, y = purchase_percent, group = 1), colour = "blue") +
+  geom_line(aes(x = Weekday, y = return_percent, group = 1), colour = "red") +
+  facet_wrap(~ DepartmentDescription, ncol = 3) + ggtitle("Purchase Percent, Return Percent")
+
+# df.dep.neg <- train %>% filter(ScanCount < 0) %>% group_by(Weekday, DepartmentDescription) %>% summarise(returns = sum(ScanCount), n = n())
+# df.tot.neg <- train %>% filter(ScanCount < 0) %>% group_by(Weekday) %>% summarise(total_return = sum(ScanCount), total_return_occurance = n())
+# df.dep.neg <- left_join(df.dep.neg, df.tot.neg, by = c("Weekday" = "Weekday"))
+# df.dep.neg$return_percent <- df.dep.neg$returns / df.dep.neg$total_return * 100
 
 
 
 
 
 # Looking at mass buys
+buy_count <- train %>% 
+  filter(ScanCount > 0) %>%
+  group_by(VisitNumber, TripType) %>%
+  summarise(count = sum(ScanCount))
+
+
+ggplot(buy_count) + geom_histogram(aes(x = count))
+ggplot(filter(buy_count, count > 25)) + geom_bar(aes(x = TripType, fill = TripType))
+
+
+type41 <- filter(train, TripType == 41)
+ggplot(type41, aes(x = DepartmentDescription, fill = DepartmentDescription)) + 
+  geom_bar(show.legend = FALSE) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
 
+types <- c(c(3:9), c(12,14,15), c(18:43), 999)
+for (i in types) {
+  temp <- filter(train, TripType == i)
+  ggplot(temp, aes(x = DepartmentDescription, fill = DepartmentDescription)) + 
+    geom_bar(show.legend = FALSE) + ggtitle(paste(i, "distribution")) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  ggsave(paste(i,"distribution.jpeg"))
+}
 
-# Plus and Maternity
-print("hi")
+impulse <- filter(train, DepartmentDescription == "IMPULSE MERCHANDISE")
+ggplot(impulse) + geom_bar(aes(x = TripType, fill = TripType))
 
+ggplot(filter(train, DepartmentDescription == "GROCERY DRY GOODS")) + geom_bar(aes(x = TripType, fill = TripType))
+ggplot(filter(train, DepartmentDescription == "DSD GROCERY")) + geom_bar(aes(x = TripType, fill = TripType))
+
+
+visit_transaction <- train %>%
+  group_by(VisitNumber, DepartmentDescription, TripType) %>%
+  summarise(dep_transaction = sum(abs(ScanCount)))
+
+total_transaction <- train %>%
+  group_by(VisitNumber) %>%
+  summarise(total_transaction = sum(abs(ScanCount)))
+
+visit_transaction <- left_join(visit_transaction, total_transaction, by = c("VisitNumber" = "VisitNumber"))
+visit_transaction$fraction <- visit_transaction$dep_transaction / visit_transaction$total_transaction
+
+temp <- visit_transaction %>%
+  filter(DepartmentDescription == "FINANCIAL SERVICES") %>%
+  filter(fraction > 0.7)
+
+temp2 <- filter(visit_transaction, TripType == 3, DepartmentDescription != "FINANCIAL SERVICES")
+View(filter(visit_transaction, DepartmentDescription == "IMPULSE MERCHANDISE", fraction == 1))
